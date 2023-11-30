@@ -1,0 +1,158 @@
+.relative {
+  position: relative;
+}
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+iframe {
+  display: block;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  font-size: 2.5vmin;
+  max-width: 800px;
+  height: 400px;
+  padding-bottom: 50px;
+}
+
+.carousel-slider {
+  display: flex;
+  transition: 0.3s;
+  height: 100%;
+}
+
+.carousel-slide {
+  min-height: 100%;
+  flex: 1 0 100%;
+}
+
+.carousel-slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.carousel button {
+  font-size: inherit;
+}
+
+.carousel-prev,
+.carousel-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 1em;
+  border: none;
+  cursor: pointer;
+}
+
+.carousel-prev {
+  left: 2em;
+}
+
+.carousel-next {
+  right: 2em;
+}
+
+.carousel-navigation {
+  position: absolute;
+  bottom: 1em;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+}
+
+.carousel-bullet {
+  width: 1em;
+  height: 1em;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.carousel-bullet.is-active {
+  background: #1c69d3;
+}
+
+
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  border: 0;
+  background: transparent;
+  user-select: none;
+
+  &:hover {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.checkbox-container {
+  display: flex;
+  width: 160px;
+  margin-bottom: 4px;
+}
+
+.checkbox-infinite-loop {
+  top: 50px;
+  left: -157px;
+}
+.checkbox {
+  margin-left: auto;
+  position: relative;
+  cursor:pointer;
+  width: 52px;
+  height: 28px;
+  -webkit-appearance: none;
+  background-color: #c6c6c6;
+  outline: none;
+  border-radius: 20px;
+  box-shadow: inset 0 0 5px rgba(0,0,0, 0.2);
+  transition: .5s;
+  &:checked {
+    background: #03a9f4;
+    &:before {
+      transform: translateX(24px);
+    }
+  }
+  &:before {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    top: 2px;
+    left: 2px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: .5s;
+  }
+}
