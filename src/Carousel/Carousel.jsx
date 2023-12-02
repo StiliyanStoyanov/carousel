@@ -1,6 +1,6 @@
 import { Children } from 'react';
 import '../App.css';
-import { useCarousel } from '../hooks/useCarousel';
+import { useCarousel } from '../hooks/useCarousel/useCarousel';
 import { mod } from '../utils';
 
 // Resources
@@ -12,7 +12,7 @@ export default function Carousel(props) {
     options,
     activeIndex,
     sliderContaineRef,
-    toggleAutoPlay,
+    toggleAutoplay,
     toggleInfiniteLoop,
     setAutoPlay,
     goToIndex,
@@ -28,7 +28,7 @@ export default function Carousel(props) {
     <div className="relative">
       <div className="checkbox-container">
         <div><b>Autoplay&nbsp;</b></div>
-        <input onChange={toggleAutoPlay} className="checkbox" type="checkbox" checked={options.autoplay} />
+        <input onChange={toggleAutoplay} className="checkbox" type="checkbox" checked={options.autoplay} />
       </div>
       <div className="checkbox-container checkbox-infinite-loop">
         <div><b>Infinite Loop&nbsp;</b></div>
@@ -67,7 +67,7 @@ Carousel.defaultProps = {
   initialIndex: 0,
   transitionDuration: 400,
   autoplay: false,
-  autoPlayInterval: 3000,
+  autoplayInterval: 3000,
   infiniteLoop: true,
-  onPageChange: (index) => { console.log(index); }
+  onPageChange: (index) => { }
 }

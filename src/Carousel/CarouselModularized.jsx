@@ -1,8 +1,8 @@
-import '../App.css'
-import { useCarousel } from '../hooks/useCarousel'
-import SlideChangeButton from './SlideChangeButton'
-import CarouselSlider from './CarouselSlider'
-import CarouselNavigation from './CarouselNavigation'
+import '../App.css';
+import { useCarousel } from '../hooks/useCarousel/useCarousel';
+import CarouselNavigation from './CarouselNavigation';
+import CarouselSlider from './CarouselSlider';
+import SlideChangeButton from './SlideChangeButton';
 
 // Resources
 // https://stackoverflow.com/questions/72690608/carousel-slideshow-with-infinite-loop
@@ -15,7 +15,7 @@ export default function CarouselModularized(props) {
     sliderContaineRef,
     goToIndex,
     goToNext,
-    goToPrevious
+    goToPrevious,
   } = useCarousel(props);
 
   return (
@@ -53,7 +53,7 @@ export default function CarouselModularized(props) {
         onClick={goToIndex}
       />
     </div>
-  )
+  );
 }
 
 CarouselModularized.defaultProps = {
@@ -62,5 +62,7 @@ CarouselModularized.defaultProps = {
   autoplay: false,
   autoPlayInterval: 3000,
   infiniteLoop: true,
-  onPageChange: (index) => {console.log(index);}
-}
+  onPageChange: (index) => {
+    console.log(index);
+  },
+};
