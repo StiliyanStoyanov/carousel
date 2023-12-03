@@ -3,13 +3,21 @@ import { useCallback, useState } from 'react';
 export function useActiveIndex(initialIndex, maxLength, minLength) {
   const [activeIndex, setActiveIndex] = useState(() => initialIndex);
 
-  const goToNext = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1 > maxLength ? prev : prev + 1));
+  const setNext = useCallback((callback) => {
+    setActiveIndex(current => {
+      const next = current + 1 > maxLength ? current : current + 1;
+      callback && callback(next)
+      return next;
+    });
   }, [maxLength]);
 
-  const goToPrevious = useCallback(() => {
-    setActiveIndex((prev) => (minLength > prev - 1 ? minLength : prev - 1));
+  const setPrevious = useCallback((callback) => {
+    setActiveIndex(current => {
+      const previous = minLength > current - 1 ? minLength : current - 1
+      callback && callback(previous);
+      return previous
+    });
   }, [minLength]);
 
-  return { activeIndex, goToNext, goToPrevious, setActiveIndex };
+  return { activeIndex, setNext, setPrevious, setActiveIndex };
 }

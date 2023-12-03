@@ -14,19 +14,36 @@ export function useCarousel(props) {
     transitionDuration: props.transitionDuration,
     direction: lastIndex > props.initialIndex ? 'right' : 'left',
   }));
+
+  const onIndexChange = useCallback((nextIndex) => {
+    setOption({defaultTransitionDuration});
+    onPageChange(nextIndex);
+  }, [defaultTransitionDuration]);
+
   const {
     activeIndex,
-    goToNext,
-    goToPrevious,
+    setNext,
+    setPrevious,
     setActiveIndex,
-  } = useActiveIndex(setInitialBounds(props.initialIndex), props.children.length, -1);
+  } = useActiveIndex(setInitialBounds(props.initialIndex), props.children.length, -1, onIndexChange);
 
-  const {autoplay, autoplayInterval, infiniteLoop, direction, transitionDuration} = options
+  const {autoplay, autoplayInterval, infiniteLoop, direction} = options
 
-  const goToIndex = useCallback((index, animated = true) => {
+  const goToIndex = (index, animated = true) => {
     setOption({ transitionDuration: animated ? defaultTransitionDuration : 0 });
     setActiveIndex(index);
-  }, [defaultTransitionDuration]);
+    onPageChange(index);
+  };
+
+  const goToNext = () => {
+    setOption({transitionDuration: defaultTransitionDuration });
+    setNext(next => onPageChange(next));
+  }
+
+  const goToPrevious = () => {
+    setOption({transitionDuration: defaultTransitionDuration });
+    setPrevious(prev => onPageChange(prev));
+  }
 
   // Options toggles/setters
   const setTransitionDuration = useCallback((transitionDuration) => setOption({transitionDuration}), [])
@@ -48,9 +65,8 @@ export function useCarousel(props) {
     };
   }, [activeIndex, lastIndex]);
 
-  // switches autoplay direction and onPageChange trigger;
+  // switches autoplay direction;
   useEffect(() => {
-    onPageChange(activeIndex);
     if (!infiniteLoop) {
       if (activeIndex === lastIndex) {
         setOption({ direction: 'left' });
@@ -58,7 +74,7 @@ export function useCarousel(props) {
         setOption({ direction: 'right' });
       }
     }
-  }, [infiniteLoop, activeIndex, lastIndex, onPageChange]);
+  }, [infiniteLoop, activeIndex, lastIndex]);
 
   // autoplay
   useEffect(() => {
