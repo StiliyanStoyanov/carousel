@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-key */
-import './App.css'
-import { Fragment, useState } from 'react'
-import Carousel from './Carousel/Carousel'
-import CarouselModularized from './Carousel/CarouselModularized'
+import './App.css';
+import { Fragment, useState } from 'react';
+import Carousel from './Carousel/Carousel';
+
 
 function App() {
   const [images, setImages] = useState([
@@ -23,20 +23,13 @@ function App() {
   return (
     <>
       <Carousel>
-        {images.map((image, index) =>
+        {images.map((item, index) =>
           <Fragment key={index}>
-            {image}
+            {item}
           </Fragment>
         )}
       </Carousel>
 
-      <CarouselModularized>
-        {iframes.map((iframe, index) =>
-          <Fragment key={index}>
-            {iframe}
-          </Fragment>
-        )}
-      </CarouselModularized>
     </>
   )
 }

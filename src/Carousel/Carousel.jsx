@@ -14,7 +14,6 @@ export default function Carousel(props) {
     sliderContaineRef,
     toggleAutoplay,
     toggleInfiniteLoop,
-    setAutoPlay,
     goToIndex,
     goToNext,
     goToPrevious
@@ -22,8 +21,6 @@ export default function Carousel(props) {
   const prevBtnVisible = (options.infiniteLoop || activeIndex !== 0);
   const nextBtnVisible = (options.infiniteLoop || activeIndex !== childrenList.length - 1);
 
-  // This can be used on the carousel-slide to pause autoplay
-  // onMouseEnter={() => setAutoPlay(false)} onMouseLeave={() => setAutoPlay(true)
   return (
     <div className="relative">
       <div className="checkbox-container">
