@@ -1,53 +1,40 @@
-import { useCallback, useEffect, useReducer, useRef } from 'react';
-import {
-  AUTOPLAY,
-  DIRECTION,
-  INFINITE_LOOP,
-  NEXT,
-  PREVIOUS,
-} from './carouselOptions';
-import { carouselReducer, createInitialState } from './carouselReducer';
-import { GO_TO, SET_OPTION, TOGGLE_OPTION } from './carouselReducerActions';
+import { useCallback, useEffect, useRef } from 'react';
+import { setInitialBounds } from '../../utils';
+import { useActiveIndex } from '../useActiveIndex/useActiveIndex';
+import { useOptions } from '../useOptions/useOptions';
 
 export function useCarousel(props) {
+  const { onPageChange, transitionDuration: defaultTransitionDuration } = props;
+  const lastIndex = props.children.length - 1;
   const sliderContaineRef = useRef(null);
-  const [state, dispatch] = useReducer(
-    carouselReducer,
-    props,
-    createInitialState
-  );
+  const { options, setOption, toggleOption } = useOptions(() => ({
+    autoplay: props.autoplay,
+    autoplayInterval: props.autoplayInterval,
+    infiniteLoop: props.infiniteLoop,
+    transitionDuration: props.transitionDuration,
+    direction: lastIndex > props.initialIndex ? 'right' : 'left',
+  }));
+  const {
+    activeIndex,
+    goToNext,
+    goToPrevious,
+    setActiveIndex,
+  } = useActiveIndex(setInitialBounds(props.initialIndex), props.children.length, -1);
 
-  const { activeIndex, lastIndex, options, childrenList } = state;
+  const {autoplay, autoplayInterval, infiniteLoop, direction, transitionDuration} = options
 
-  const goToNext = useCallback(
-    () => dispatch({ type: GO_TO, payload: { NEXT } }),
-    []
-  );
-  const goToPrevious = useCallback(
-    () => dispatch({ type: GO_TO, payload: { PREVIOUS } }),
-    []
-  );
-  const goToIndex = useCallback(
-    (index, animated = true) =>
-      dispatch({ type: GO_TO, payload: { index, animated } }),
-    []
-  );
+  const goToIndex = useCallback((index, animated = true) => {
+    setOption({ transitionDuration: animated ? defaultTransitionDuration : 0 });
+    setActiveIndex(index);
+  }, [defaultTransitionDuration]);
 
-  // Options toggles
-  const setAutoplay = useCallback(
-    (boolean) => dispatch({ type: SET_OPTION, payload: { AUTOPLAY: boolean } }),
-    []
-  );
-  const toggleAutoplay = useCallback(
-    () => dispatch({ type: TOGGLE_OPTION, payload: AUTOPLAY }),
-    []
-  );
-  const toggleInfiniteLoop = useCallback(
-    () => dispatch({ type: TOGGLE_OPTION, payload: INFINITE_LOOP }),
-    []
-  );
+  // Options toggles/setters
+  const setTransitionDuration = useCallback((transitionDuration) => setOption({transitionDuration}), [])
+  const setAutoplay = useCallback((boolean) => setOption({ autoplay: boolean }), []);
+  const toggleAutoplay = useCallback(() => toggleOption('autoplay'), []);
+  const toggleInfiniteLoop = useCallback(() => toggleOption('infiniteLoop'), []);
 
-  // Infinite loop effect
+  // infinite loop effect
   useEffect(() => {
     const ref = sliderContaineRef.current;
     const handleTransition = () => {
@@ -59,50 +46,45 @@ export function useCarousel(props) {
     return () => {
       ref.removeEventListener('transitionend', handleTransition);
     };
-  }, [activeIndex, lastIndex, goToIndex]);
+  }, [activeIndex, lastIndex]);
 
-  // Switches autoplay direction if not infinite loop;
+  // switches autoplay direction and onPageChange trigger;
   useEffect(() => {
-    if (!options.infiniteLoop) {
+    onPageChange(activeIndex);
+    if (!infiniteLoop) {
       if (activeIndex === lastIndex) {
-        dispatch({ type: SET_OPTION, payload: { [DIRECTION]: 'left' } });
+        setOption({ direction: 'left' });
       } else if (activeIndex === 0) {
-        dispatch({ type: SET_OPTION, payload: { [DIRECTION]: 'right' } });
+        setOption({ direction: 'right' });
       }
     }
-  }, [options.infiniteLoop, activeIndex, lastIndex]);
+  }, [infiniteLoop, activeIndex, lastIndex, onPageChange]);
 
-  // Autoplay
+  // autoplay
   useEffect(() => {
     let interval;
-    if (options.autoplay) {
-      console.log('autoplay');
-      if (options.direction === 'right') {
-        interval = setInterval(() => goToNext(), options.autoplayInterval);
-      } else if (options.direction === 'left') {
-        interval = setInterval(() => goToPrevious(), options.autoplayInterval);
+    if (autoplay) {
+      if (direction === 'right') {
+        interval = setInterval(() => goToNext(), autoplayInterval);
+      } else if (direction === 'left') {
+        interval = setInterval(() => goToPrevious(), autoplayInterval);
       }
     }
 
     return () => {
       return clearInterval(interval);
     };
-  }, [
-    options.direction,
-    options.autoplay,
-    options.autoplayInterval,
-    goToNext,
-    goToPrevious,
-  ]);
+  }, [direction, autoplay, autoplayInterval]);
 
   return {
     options,
     activeIndex,
-    childrenList,
+    childrenList: props.children,
     sliderContaineRef,
     toggleAutoplay,
     toggleInfiniteLoop,
     setAutoplay,
+    setTransitionDuration,
     goToNext,
     goToPrevious,
     goToIndex,
