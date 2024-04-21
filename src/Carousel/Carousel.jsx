@@ -1,7 +1,7 @@
 import { Children } from 'react';
-import '../App.css';
-import { useCarousel } from '../hooks/useCarousel/useCarousel';
+import { useCarousel } from '../hooks/useCarousel';
 import { mod } from '../utils';
+import '../App.css';
 
 // Resources
 // https://stackoverflow.com/questions/72690608/carousel-slideshow-with-infinite-loop
