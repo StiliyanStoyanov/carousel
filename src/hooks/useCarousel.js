@@ -11,7 +11,8 @@ export function useCarousel(props) {
     autoplay: props.autoplay,
     autoplayInterval: props.autoplayInterval,
     infiniteLoop: props.infiniteLoop,
-    transitionDuration: props.transitionDuration,
+    transitionDuration: defaultTransitionDuration,
+    internalTransitionDuration: defaultTransitionDuration,
     direction: lastIndex > props.initialIndex ? 'right' : 'left',
   }));
 
@@ -21,26 +22,27 @@ export function useCarousel(props) {
     -1,
   );
 
-  const { autoplay, autoplayInterval, infiniteLoop, direction } = options;
+  const { internalTransitionDuration, transitionDuration, autoplay, autoplayInterval, infiniteLoop, direction } = options;
 
   const goToIndex = (index, animated = true) => {
-    setOption({ transitionDuration: animated ? defaultTransitionDuration : 0 });
+    setOption({ internalTransitionDuration: animated ? internalTransitionDuration : 0 });
     setActiveIndex(index);
     onPageChange(index);
   };
 
   const goToNext = () => {
-    setOption({ transitionDuration: defaultTransitionDuration });
+    setOption({ internalTransitionDuration: transitionDuration, transitionDuration });
     setNext(onPageChange);
   };
 
   const goToPrevious = () => {
-    setOption({ transitionDuration: defaultTransitionDuration });
+    setOption({ internalTransitionDuration: transitionDuration, transitionDuration });
     setPrevious(onPageChange);
   };
 
   // Options toggles/setters
-  const setTransitionDuration = useCallback((transitionDuration) => setOption({ transitionDuration }),[]);
+  const setTransitionDuration = useCallback((transitionDuration) => setOption({ internalTransitionDuration: transitionDuration, transitionDuration }),[]);
+  const setAutoplayInterval = useCallback((interval) => setOption({ autoplayInterval: interval }),[]);
   const setAutoplay = useCallback((boolean) => setOption({ autoplay: boolean }),[]);
   const toggleAutoplay = useCallback(() => toggleOption('autoplay'), []);
   const toggleInfiniteLoop = useCallback(() => toggleOption('infiniteLoop'),[]);
@@ -95,6 +97,7 @@ export function useCarousel(props) {
     toggleInfiniteLoop,
     setAutoplay,
     setTransitionDuration,
+    setAutoplayInterval,
     goToNext,
     goToPrevious,
     goToIndex,
