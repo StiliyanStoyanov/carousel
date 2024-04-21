@@ -80,9 +80,9 @@ export default function Carousel(props) {
 
 Carousel.defaultProps = {
   initialIndex: 0,
-  transitionDuration: 100,
+  transitionDuration: 400,
   autoplay: false,
-  autoplayInterval: 500,
+  autoplayInterval: 3000,
   infiniteLoop: true,
   onPageChange: (index) => { }
 }
